@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Banquett Flórez · MediSys</title>
+
+  <!-- ── ESTILOS ── -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── DECORACIÓN DE FONDO ── -->
+<div class="atmosphere"></div>
+<div class="grid-overlay"></div>
+
+<!-- ════════════════════════════════════════
+         PANTALLA DE LOGIN
+════════════════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-container">
+
+    <!-- Panel izquierdo decorativo -->
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="login-medallion">⚕️</div>
+        <h1>Dr. José Fernando<br>Banquett Flórez</h1>
+        <p>Medicina General</p>
+        <div class="login-divider"></div>
+        <p class="login-tagline">
+          Sistema digital de gestión médica para consulta privada
+          y seguimiento de pacientes.
+        </p>
+      </div>
+      <p class="login-footer-tag">· Montería, Córdoba</p>
+    </div>
+
+    <!-- Panel derecho: formulario -->
+    <div class="login-right">
+      <h2>Bienvenido</h2>
+
+      <div class="lf">
+        <label>Usuario</label>
+        <input type="text" id="lu" placeholder="dr.banquett" autocomplete="username">
+      </div>
+      <div class="lf">
+        <label>Contraseña</label>
+        <input type="password" id="lp" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button class="login-btn" onclick="login()">Acceder al Sistema</button>
+      <p class="login-err" id="lerr"></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+         APLICACIÓN PRINCIPAL
+════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- ══ BARRA LATERAL (SIDEBAR) ══ -->
+  <aside class="sidebar">
+    <div class="sb-head">
+      <div class="sb-brand">
+        <div class="sb-logo">⚕️</div>
+        <div class="sb-title">
+          <h3>MediSys Banquett</h3>
+          <p>Gestión Médica</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="nav-item active" onclick="go('dashboard', this)">
+        <span class="nav-icon"></span>Dashboard
+      </div>
+      <div class="nav-item" onclick="go('pacientes', this)">
+        <span class="nav-icon"></span>Pacientes
+        <span class="nav-badge" id="nb1">0</span>
+      </div>
+
+      <div class="sb-section">Clínico</div>
+      <div class="nav-item" onclick="go('historial', this)">
+        <span class="nav-icon"></span>Historial Clínico
+        <span class="nav-badge" id="nb2">0</span>
+      </div>
+      <div class="nav-item" onclick="go('peso', this)">
+        <span class="nav-icon"></span>Control de Peso
+        <span class="nav-badge" id="nb3">0</span>
+      </div>
+      <div class="nav-item" onclick="go('tratamientos', this)">
+        <span class="nav-icon"></span>Tratamientos
+        <span class="nav-badge" id="nb4">0</span>
+      </div>
+
+      <div class="sb-section">Agenda</div>
+      <div class="nav-item" onclick="go('agenda', this)">
+        <span class="nav-icon"></span>Citas &amp; Agenda
+        <span class="nav-badge" id="nb5">0</span>
+      </div>
+    </nav>
+
+    <div class="sb-foot">
+      <div class="doc-card">
+        <div class="doc-av"></div>
+        <div class="doc-info">
+          <h4>Dr. Banquett Flórez</h4>
+          <p>Médico General</p>
+        </div>
+        <button class="logout-btn" onclick="logout()" title="Cerrar sesión">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ CONTENIDO PRINCIPAL ══ -->
+  <main class="main">
+
+    <!-- ─── DASHBOARD ─── -->
+    <div id="pg-dashboard" class="page active">
+      <div class="ph">
+        <h2>Buenos días, <em>Doctor</em> 🌿</h2>
+        <p id="fechaHoy"></p>
+        <div class="ph-line"></div>
+      </div>
+
+      <div class="welcome-banner">
+        <div class="wb-icon">🌸</div>
+        <div class="wb-text">
+          <h3>Sistema de Gestión Médica</h3>
+          <p>Toda la información de sus pacientes organizada, segura y siempre disponible.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-ico">👥</div>
+          <div class="stat-lbl">Pacientes</div>
+          <div class="stat-num" id="s1">0</div>
+          <div class="stat-sub">Registrados</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico">📅</div>
+          <div class="stat-lbl">Citas</div>
+          <div class="stat-num" id="s2">0</div>
+          <div class="stat-sub">Programadas</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico">⚖️</div>
+          <div class="stat-lbl">Control Peso</div>
+          <div class="stat-num" id="s3">0</div>
+          <div class="stat-sub">Registros</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico">💊</div>
+          <div class="stat-lbl">Tratamientos</div>
+          <div class="stat-num" id="s4">0</div>
+          <div class="stat-sub">Activos</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🌸 Últimos Pacientes</div>
+          <div id="d-pacs">
+            <div class="empty"><span class="ei">👥</span><p>Sin pacientes aún</p></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 Próximas Citas</div>
+          <div id="d-citas">
+            <div class="empty"><span class="ei">📅</span><p>Sin citas programadas</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PACIENTES ─── -->
+    <div id="pg-pacientes" class="page">
+      <div class="ph">
+        <h2>Registro de <em>Pacientes</em></h2>
+        <p>Añade y consulta la información completa de cada paciente</p>
+        <div class="ph-line"></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on" onclick="tab(this,'tp-nuevo')">✦ Nuevo Paciente</button>
+        <button class="tab" onclick="tab(this,'tp-lista')">✦ Lista de Pacientes</button>
+      </div>
+
+      <!-- Formulario nuevo paciente -->
+      <div id="tp-nuevo">
+        <div class="card">
+          <div class="card-title">💐 Datos del Paciente</div>
+          <div class="fg">
+            <div class="ff"><label>Nombre Completo *</label><input id="pn" placeholder="Nombre y apellidos"></div>
+            <div class="ff"><label>Cédula / ID *</label><input id="pc" placeholder="No. Identificación"></div>
+            <div class="ff"><label>Fecha de Nacimiento</label><input type="date" id="pfn"></div>
+            <div class="ff"><label>Sexo</label>
+              <select id="ps">
+                <option value="">Seleccionar</option>
+                <option>Femenino</option>
+                <option>Masculino</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="ff"><label>Teléfono</label><input type="tel" id="pt" placeholder="Celular / fijo"></div>
+            <div class="ff"><label>Correo Electrónico</label><input type="email" id="pe" placeholder="correo@ejemplo.com"></div>
+            <div class="ff fc"><label>Dirección</label><input id="pd" placeholder="Dirección completa"></div>
+            <div class="ff"><label>Tipo de Sangre</label>
+              <select id="psang">
+                <option value="">Seleccionar</option>
+                <option>O+</option><option>O-</option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option>
+              </select>
+            </div>
+            <div class="ff"><label>EPS / Aseguradora</label><input id="peps" placeholder="Entidad de salud"></div>
+            <div class="ff"><label>Alergias</label><input id="pal" placeholder="Medicamentos, alimentos..."></div>
+            <div class="ff"><label>Antecedentes</label><input id="pant" placeholder="Enf. crónicas, cirugías..."></div>
+            <div class="ff fc"><label>Motivo de Consulta</label><textarea id="pm" placeholder="Razón principal..."></textarea></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="savePac()">✦ Guardar Paciente</button>
+            <button class="btn btn-o" onclick="clearPac()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de pacientes -->
+      <div id="tp-lista" style="display:none">
+        <div class="card">
+          <div class="card-title">👥 Pacientes Registrados</div>
+          <div class="search-wrap">
+            <div class="si">
+              <span class="si-icon">🔍</span>
+              <input placeholder="Buscar por nombre, cédula o EPS..." oninput="filtPac(this.value)">
+            </div>
+            <button class="btn btn-t" onclick="exportPDF('tablaPac','Pacientes Registrados')">🖨 Exportar PDF</button>
+          </div>
+          <div class="tw">
+            <table id="tablaPac">
+              <thead>
+                <tr>
+                  <th>#</th><th>Nombre</th><th>Cédula</th><th>Edad</th>
+                  <th>Sexo</th><th>Teléfono</th><th>EPS</th>
+                  <th>Sangre</th><th>Alergias</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbPac">
+                <tr><td colspan="10"><div class="empty"><span class="ei">👥</span><p>No hay pacientes aún</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── HISTORIAL CLÍNICO ─── -->
+    <div id="pg-historial" class="page">
+      <div class="ph">
+        <h2>Historial <em>Clínico</em></h2>
+        <p>Registro de consultas, signos vitales y diagnósticos</p>
+        <div class="ph-line"></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on" onclick="tab(this,'th-nuevo')">✦ Nueva Consulta</button>
+        <button class="tab" onclick="tab(this,'th-lista')">✦ Ver Historial</button>
+      </div>
+
+      <div id="th-nuevo">
+        <div class="card">
+          <div class="card-title">📋 Registrar Consulta</div>
+          <div class="fg">
+            <div class="ff"><label>Paciente *</label><select id="hp"><option value="">Seleccionar paciente</option></select></div>
+            <div class="ff"><label>Fecha *</label><input type="date" id="hf"></div>
+            <div class="ff"><label>Motivo de Consulta</label><input id="hm" placeholder="Razón de la visita"></div>
+            <div class="ff"><label>Diagnóstico (CIE-10)</label><input id="hd" placeholder="Código o descripción"></div>
+            <div class="ff"><label>Presión Arterial</label><input id="hpa" placeholder="120/80 mmHg"></div>
+            <div class="ff"><label>Temperatura (°C)</label><input type="number" id="ht" placeholder="37.0" step="0.1"></div>
+            <div class="ff"><label>Frec. Cardíaca (bpm)</label><input type="number" id="hfc" placeholder="70"></div>
+            <div class="ff"><label>Saturación O₂ (%)</label><input type="number" id="hsat" placeholder="98"></div>
+            <div class="ff"><label>Peso Actual (kg)</label><input type="number" id="hpeso" placeholder="65.0" step="0.1"></div>
+            <div class="ff"><label>Frecuencia Resp.</label><input type="number" id="hfr" placeholder="16 rpm"></div>
+            <div class="ff fc"><label>Examen Físico / Notas</label><textarea id="hn" placeholder="Hallazgos clínicos..."></textarea></div>
+            <div class="ff fc"><label>Plan de Manejo</label><textarea id="hplan" placeholder="Tratamiento indicado, seguimiento..."></textarea></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="saveHist()">✦ Guardar Consulta</button>
+            <button class="btn btn-o" onclick="clearHist()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="th-lista" style="display:none">
+        <div class="card">
+          <div class="card-title">📋 Historial de Consultas</div>
+          <div class="search-wrap">
+            <div class="si">
+              <span class="si-icon">🔍</span>
+              <input placeholder="Buscar por paciente o diagnóstico..." oninput="filtHist(this.value)">
+            </div>
+            <button class="btn btn-t" onclick="exportPDF('tablaHist','Historial Clínico')">🖨 Exportar PDF</button>
+          </div>
+          <div class="tw">
+            <table id="tablaHist">
+              <thead>
+                <tr>
+                  <th>Fecha</th><th>Paciente</th><th>Motivo</th><th>Diagnóstico</th>
+                  <th>P.A.</th><th>Temp.</th><th>FC</th><th>Sat O₂</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbHist">
+                <tr><td colspan="9"><div class="empty"><span class="ei">📋</span><p>Sin consultas registradas</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── CONTROL DE PESO ─── -->
+    <div id="pg-peso" class="page">
+      <div class="ph">
+        <h2>Control de <em>Peso</em></h2>
+        <p>Seguimiento nutricional, IMC y evolución corporal</p>
+        <div class="ph-line"></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on" onclick="tab(this,'tw-nuevo')">✦ Nuevo Registro</button>
+        <button class="tab" onclick="tab(this,'tw-lista')">✦ Seguimiento</button>
+      </div>
+
+      <div id="tw-nuevo">
+        <div class="card">
+          <div class="card-title">⚖️ Medidas Corporales</div>
+          <div class="fg fg3">
+            <div class="ff"><label>Paciente *</label><select id="wp"><option value="">Seleccionar</option></select></div>
+            <div class="ff"><label>Fecha *</label><input type="date" id="wf"></div>
+            <div class="ff"><label>Peso Actual (kg)</label><input type="number" id="wpes" placeholder="65.5" step="0.1" oninput="calcIMC()"></div>
+            <div class="ff"><label>Talla (cm)</label><input type="number" id="wtal" placeholder="168" step="0.5" oninput="calcIMC()"></div>
+            <div class="ff"><label>IMC (automático)</label><input id="wimc" readonly placeholder="—"></div>
+            <div class="ff"><label>Peso Meta (kg)</label><input type="number" id="wmeta" placeholder="60.0" step="0.1"></div>
+            <div class="ff"><label>Cintura (cm)</label><input type="number" id="wcin" placeholder="80" step="0.5"></div>
+            <div class="ff"><label>Cadera (cm)</label><input type="number" id="wcad" placeholder="95" step="0.5"></div>
+            <div class="ff"><label>% Grasa Corporal</label><input type="number" id="wgra" placeholder="25" step="0.1"></div>
+            <div class="ff fc"><label>Plan Alimenticio</label><textarea id="wplan" placeholder="Descripción del plan nutricional..."></textarea></div>
+            <div class="ff fc"><label>Observaciones</label><textarea id="wobs" placeholder="Notas del control..."></textarea></div>
+          </div>
+          <div id="imcResult"></div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="savePeso()">✦ Guardar Registro</button>
+            <button class="btn btn-o" onclick="clearPeso()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tw-lista" style="display:none">
+        <div class="card">
+          <div class="card-title">📊 Evolución de Pacientes</div>
+          <div class="search-wrap">
+            <div class="si">
+              <span class="si-icon">🔍</span>
+              <input placeholder="Buscar paciente..." oninput="filtPeso(this.value)">
+            </div>
+            <button class="btn btn-t" onclick="exportPDF('tablaPeso','Control de Peso')">🖨 Exportar PDF</button>
+          </div>
+          <div class="tw">
+            <table id="tablaPeso">
+              <thead>
+                <tr>
+                  <th>Fecha</th><th>Paciente</th><th>Peso</th><th>Talla</th>
+                  <th>IMC</th><th>Cintura</th><th>Cadera</th><th>% Grasa</th>
+                  <th>Estado</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbPeso">
+                <tr><td colspan="10"><div class="empty"><span class="ei">⚖️</span><p>Sin registros de peso</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TRATAMIENTOS ─── -->
+    <div id="pg-tratamientos" class="page">
+      <div class="ph">
+        <h2>Tratamientos y <em>Fórmulas</em></h2>
+        <p>Prescripciones médicas y seguimiento terapéutico</p>
+        <div class="ph-line"></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on" onclick="tab(this,'tt-nuevo')">✦ Nueva Fórmula</button>
+        <button class="tab" onclick="tab(this,'tt-lista')">✦ Tratamientos</button>
+      </div>
+
+      <div id="tt-nuevo">
+        <div class="card">
+          <div class="card-title">💊 Prescripción Médica</div>
+          <div class="fg">
+            <div class="ff"><label>Paciente *</label><select id="tp"><option value="">Seleccionar</option></select></div>
+            <div class="ff"><label>Fecha Inicio *</label><input type="date" id="tf"></div>
+            <div class="ff"><label>Diagnóstico</label><input id="tdiag" placeholder="Diagnóstico asociado"></div>
+            <div class="ff"><label>Duración</label><input id="tdur" placeholder="Ej: 7 días / 1 mes"></div>
+            <div class="ff"><label>Medicamento 1 *</label><input id="tm1" placeholder="Nombre del medicamento"></div>
+            <div class="ff"><label>Dosis / Frecuencia</label><input id="td1" placeholder="500mg cada 8h"></div>
+            <div class="ff"><label>Medicamento 2</label><input id="tm2" placeholder="(Opcional)"></div>
+            <div class="ff"><label>Dosis / Frecuencia</label><input id="td2" placeholder="10mg diario"></div>
+            <div class="ff"><label>Medicamento 3</label><input id="tm3" placeholder="(Opcional)"></div>
+            <div class="ff"><label>Dosis / Frecuencia</label><input id="td3" placeholder="(Opcional)"></div>
+            <div class="ff fc"><label>Indicaciones al Paciente</label><textarea id="tind" placeholder="Instrucciones especiales..."></textarea></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="saveTrat()">✦ Guardar Fórmula</button>
+            <button class="btn btn-r" onclick="imprimirFormula()">🖨 Imprimir Fórmula</button>
+            <button class="btn btn-o" onclick="clearTrat()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tt-lista" style="display:none">
+        <div class="card">
+          <div class="card-title">💊 Tratamientos Registrados</div>
+          <div class="search-wrap">
+            <div class="si">
+              <span class="si-icon">🔍</span>
+              <input placeholder="Buscar por paciente o medicamento..." oninput="filtTrat(this.value)">
+            </div>
+            <button class="btn btn-t" onclick="exportPDF('tablaTrat','Tratamientos')">🖨 Exportar PDF</button>
+          </div>
+          <div class="tw">
+            <table id="tablaTrat">
+              <thead>
+                <tr>
+                  <th>Fecha</th><th>Paciente</th><th>Diagnóstico</th>
+                  <th>Medicamento 1</th><th>Dosis</th><th>Medicamento 2</th>
+                  <th>Duración</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbTrat">
+                <tr><td colspan="8"><div class="empty"><span class="ei">💊</span><p>Sin tratamientos</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── AGENDA ─── -->
+    <div id="pg-agenda" class="page">
+      <div class="ph">
+        <h2>Citas &amp; <em>Agenda</em></h2>
+        <p>Gestión y organización de citas médicas</p>
+        <div class="ph-line"></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab on" onclick="tab(this,'ta-nuevo')">✦ Nueva Cita</button>
+        <button class="tab" onclick="tab(this,'ta-lista')">✦ Ver Agenda</button>
+      </div>
+
+      <div id="ta-nuevo">
+        <div class="card">
+          <div class="card-title">📅 Programar Cita</div>
+          <div class="fg">
+            <div class="ff"><label>Paciente *</label><select id="cp"><option value="">Seleccionar</option></select></div>
+            <div class="ff"><label>Fecha *</label><input type="date" id="cf"></div>
+            <div class="ff"><label>Hora *</label><input type="time" id="ch"></div>
+            <div class="ff"><label>Tipo de Cita</label>
+              <select id="ct">
+                <option value="">Seleccionar</option>
+                <option>Primera Vez</option>
+                <option>Consulta General</option>
+                <option>Control de Peso</option>
+                <option>Control Postoperatorio</option>
+                <option>Revisión de Resultados</option>
+                <option>Urgencia</option>
+                <option>Teleconsulta</option>
+              </select>
+            </div>
+            <div class="ff fc"><label>Notas / Preparación</label><textarea id="cn" placeholder="Indicaciones previas..."></textarea></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="saveCita()">✦ Agendar Cita</button>
+            <button class="btn btn-o" onclick="clearCita()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="ta-lista" style="display:none">
+        <div class="card">
+          <div class="card-title">📅 Citas Programadas</div>
+          <div class="search-wrap">
+            <div class="si">
+              <span class="si-icon">🔍</span>
+              <input placeholder="Buscar cita por paciente o tipo..." oninput="filtCita(this.value)">
+            </div>
+            <button class="btn btn-t" onclick="exportPDF('tablaCita','Agenda de Citas')">🖨 Exportar PDF</button>
+          </div>
+          <div class="tw">
+            <table id="tablaCita">
+              <thead>
+                <tr>
+                  <th>Fecha</th><th>Hora</th><th>Paciente</th>
+                  <th>Tipo</th><th>Notas</th><th>Estado</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbCita">
+                <tr><td colspan="7"><div class="empty"><span class="ei">📅</span><p>Sin citas programadas</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── MODAL DE DETALLE ── -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modal-title">Detalle</h3>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ── NOTIFICACIÓN TOAST ── -->
+<div class="toast" id="toast">
+  <span class="toast-ic" id="tic"></span>
+  <span id="tmsg"></span>
+</div>
+
+<!-- ── JAVASCRIPT ── -->
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal del Paciente · MediSys Banquett</title>
+  <meta name="description" content="Portal de pacientes del Dr. Banquett Flórez. Consulte su historial clínico y descargue sus registros médicos.">
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+
+<!-- ── DECORACIÓN ── -->
+<div class="atmosphere"></div>
+<div class="grid-overlay"></div>
+
+<!-- ════════════════════════════════════════
+         PANTALLA DE LOGIN DEL PACIENTE
+════════════════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-container">
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="login-medallion">👤</div>
+        <h1>Portal del<br>Paciente</h1>
+        <p>MediSys Banquett</p>
+        <div class="login-divider"></div>
+        <p class="login-tagline">
+          Acceda a su historial clínico, tratamientos, citas y descargue sus registros médicos en PDF.
+        </p>
+      </div>
+      <p class="login-footer-tag">· Dr. Banquett Flórez · Montería</p>
+    </div>
+
+    <div class="login-right">
+      <h2>Acceder</h2>
+      <p class="login-sub">Ingrese sus credenciales proporcionadas por el doctor</p>
+
+      <div class="lf">
+        <label>Número de Cédula</label>
+        <input type="text" id="loginCedula" placeholder="Ej: 1234567890" autocomplete="username">
+      </div>
+      <div class="lf">
+        <label>Código de Acceso</label>
+        <input type="text" id="loginCodigo" placeholder="Código de 6 dígitos" maxlength="6" autocomplete="off">
+      </div>
+
+      <button class="login-btn" onclick="portalLogin()">Acceder al Portal</button>
+      <p class="login-err" id="lerr"></p>
+
+      <a href="/" class="back-link">← Volver al panel médico</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+         PORTAL PRINCIPAL
+════════════════════════════════════════ -->
+<div id="portal" style="display:none">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-logo">⚕️</span>
+      <div>
+        <h3>MediSys Banquett</h3>
+        <p>Portal del Paciente</p>
+      </div>
+    </div>
+    <div class="topbar-user">
+      <span class="user-name" id="userName">Paciente</span>
+      <button class="logout-btn" onclick="portalLogout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <!-- Contenido -->
+  <main class="portal-main">
+
+    <!-- Bienvenida -->
+    <div class="welcome-section">
+      <div class="welcome-icon">🌿</div>
+      <div>
+        <h1 id="welcomeTitle">Bienvenido</h1>
+        <p>Aquí puede consultar su información médica y descargar su historial clínico completo.</p>
+      </div>
+      <button class="btn-download" onclick="descargarPDF()">
+        📄 Descargar Historial PDF
+      </button>
+    </div>
+
+    <!-- Navegación por secciones -->
+    <div class="portal-tabs">
+      <button class="ptab active" onclick="showSection('perfil', this)">👤 Mi Perfil</button>
+      <button class="ptab" onclick="showSection('historial', this)">📋 Historial</button>
+      <button class="ptab" onclick="showSection('tratamientos', this)">💊 Tratamientos</button>
+      <button class="ptab" onclick="showSection('citas', this)">📅 Citas</button>
+      <button class="ptab" onclick="showSection('peso', this)">⚖️ Control de Peso</button>
+    </div>
+
+    <!-- ── PERFIL ── -->
+    <div id="sec-perfil" class="portal-section active">
+      <div class="section-card">
+        <h2 class="section-title">👤 Mis Datos Personales</h2>
+        <div id="perfilContent" class="profile-grid">
+          <div class="empty-msg">Cargando datos...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HISTORIAL ── -->
+    <div id="sec-historial" class="portal-section">
+      <div class="section-card">
+        <h2 class="section-title">📋 Mi Historial Clínico</h2>
+        <div id="historialContent">
+          <div class="empty-msg">Cargando historial...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TRATAMIENTOS ── -->
+    <div id="sec-tratamientos" class="portal-section">
+      <div class="section-card">
+        <h2 class="section-title">💊 Mis Tratamientos</h2>
+        <div id="tratamientosContent">
+          <div class="empty-msg">Cargando tratamientos...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CITAS ── -->
+    <div id="sec-citas" class="portal-section">
+      <div class="section-card">
+        <h2 class="section-title">📅 Mis Citas</h2>
+        <div id="citasContent">
+          <div class="empty-msg">Cargando citas...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PESO ── -->
+    <div id="sec-peso" class="portal-section">
+      <div class="section-card">
+        <h2 class="section-title">⚖️ Mi Evolución de Peso</h2>
+        <div id="pesoContent">
+          <div class="empty-msg">Cargando registros...</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="portal.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "medisys-banquett",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión Médica - Dr. José Fernando Banquett Flórez",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "seed": "node database/seed.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "nodemailer": "^6.9.16",
+    "pdfkit": "^0.16.0"
+  }
+}
