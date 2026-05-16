@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "seed": "node database/seed.js",
+    "prestart": "npm run seed",
     "start": "node server.js"
   },
   "dependencies": {
