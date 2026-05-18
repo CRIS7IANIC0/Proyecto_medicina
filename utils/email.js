@@ -135,7 +135,7 @@ async function enviarCorreo(to, subject, html) {
     const fromAddress = process.env.RESEND_FROM || 'onboarding@resend.dev';
     
     const { data, error } = await resend.emails.send({
-      from: \`MediSys Banquett <\${fromAddress}>\`,
+      from: `MediSys Banquett <${fromAddress}>`,
       to,
       subject,
       html
