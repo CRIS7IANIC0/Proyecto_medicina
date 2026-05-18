@@ -7,6 +7,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 const cors = require('cors');
 const path = require('path');
 const dns = require('dns');
@@ -31,6 +32,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Sesiones
 app.use(session({
+  store: new SQLiteStore({
+    db: 'sessions.sqlite',
+    dir: path.join(__dirname, 'database'),
+    concurrentDB: true
+  }),
   secret: process.env.SESSION_SECRET || 'medisys-secret-default',
   resave: false,
   saveUninitialized: false,
