@@ -3,21 +3,10 @@
    Archivo: utils/email.js
 ═══════════════════════════════════════════════ */
 
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-// Crear transporter SMTP
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: parseInt(process.env.SMTP_PORT) === 465,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+// Crear cliente de Resend
+const resend = new Resend(process.env.RESEND_API_KEY || 're_JXK4iFRk_8rp2HrM31DMjSnEkxrSKG1dM');
 
 // ── PLANTILLA BASE HTML ──
 function plantillaBase(contenido) {
@@ -143,23 +132,24 @@ async function enviarBienvenida(paciente) {
 // ═══════════════════════════════
 async function enviarCorreo(to, subject, html) {
   try {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || process.env.SMTP_USER === 'tu-correo@gmail.com') {
-      console.log('📧 [SMTP no configurado] Correo simulado para:', to);
-      console.log('   Asunto:', subject);
-      return { enviado: false, razon: 'SMTP no configurado' };
-    }
-
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    const fromAddress = process.env.RESEND_FROM || 'onboarding@resend.dev';
+    
+    const { data, error } = await resend.emails.send({
+      from: \`MediSys Banquett <\${fromAddress}>\`,
       to,
       subject,
       html
     });
 
-    console.log('📧 Correo enviado a:', to);
+    if (error) {
+      console.error('❌ Error de Resend API:', error.message);
+      return { enviado: false, razon: error.message };
+    }
+
+    console.log('📧 Correo enviado con Resend a:', to, '| ID:', data.id);
     return { enviado: true };
   } catch (err) {
-    console.error('❌ Error enviando correo:', err.message);
+    console.error('❌ Error inesperado enviando correo:', err.message);
     return { enviado: false, razon: err.message };
   }
 }
