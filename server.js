@@ -9,6 +9,12 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
+const dns = require('dns');
+
+// Solución para evitar "Connection timeout" de Node 18+ en contenedores Linux/Railway (fuerza IPv4)
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 // Inicializar base de datos (crea tablas si no existen)
 require('./database/db');

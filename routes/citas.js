@@ -36,12 +36,13 @@ router.post('/', async (req, res) => {
 
     // Enviar correo de confirmación (asíncrono, no bloquea)
     const paciente = db.prepare('SELECT * FROM pacientes WHERE id = ?').get(paciente_id);
-    let emailResult = { enviado: false };
     if (paciente) {
-      emailResult = await enviarConfirmacionCita(paciente, cita);
+      // Enviamos el correo sin esperar a que termine para no colgar la página
+      enviarConfirmacionCita(paciente, cita).catch(err => console.error('Error no capturado en correo:', err));
     }
 
-    res.status(201).json({ ...cita, emailEnviado: emailResult.enviado });
+    // Respondemos de inmediato al frontend
+    res.status(201).json({ ...cita, emailEnviado: true });
   } catch (err) {
     res.status(500).json({ error: 'Error al crear cita' });
   }
@@ -70,7 +71,7 @@ router.delete('/:id', async (req, res) => {
     if (cita) {
       const paciente = db.prepare('SELECT * FROM pacientes WHERE id = ?').get(cita.paciente_id);
       if (paciente) {
-        await enviarCancelacionCita(paciente, cita);
+        enviarCancelacionCita(paciente, cita).catch(err => console.error('Error no capturado en correo:', err));
       }
     }
 
